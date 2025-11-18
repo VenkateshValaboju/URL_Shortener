@@ -1,8 +1,8 @@
-import express from "express"
+import express, { Router } from "express"
 import connectDB from "./src/config/mongo.config.js";
 import dotenv from "dotenv"
-import { nanoid } from "nanoid";
 import urlSchema from "./src/models/short_url.model.js"
+import router from "./src/routes/short_url.route.js";
 
 dotenv.config()
 const app= express()
@@ -10,15 +10,7 @@ app.use(express.urlencoded({extended:true}))
 
 app.use(express.json())
 
-app.post('/api/create', async(req,res)=>{
-  const {url}=req.body
-  const short_url=nanoid(7)
-  await urlSchema.create({
-    full_url:url,
-    short_url:short_url
-  })
-  res.send(short_url)
-})
+app.use('/api/create',router)
 
 app.get('/:id', async(req,res)=>{
   const {id}=req.params
